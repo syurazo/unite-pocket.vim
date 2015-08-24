@@ -4,6 +4,11 @@
 
 unite-pocket.vim は Pocket に保存したコンテンツを Vim で操作するための Unite source です。
 
+## 必要なプラグイン
+
+    NeoBundle 'mattn/webapi-vim.git'
+    NeoBundle 'tyru/open-browser.vim'
+
 ## インストール手順
 
     NeoBundle 'syurazo/unite-pocket.vim'
@@ -90,3 +95,17 @@ unite-pocket.vim は Pocket に保存したコンテンツを Vim で操作す�
  Pocket API の Access token 等を保存するファイルを指定する。
 
     let g:unite_pocket_config_file = '~/.unite-pocket'
+
+
+## カスタマイズ
+
+### カーソル下の URL を Pocket に登録する
+
+    nnoremap <silent> <Leader>zpA 
+    \ :<C-u>execute 'PocketAdd ' . openbrowser#get_url_on_cursor()<CR>
+
+### W3m.vim でカレントバッファに表示している URL を Pocket に登録する
+
+    nnoremap <silent> <Leader>zpW
+    \ :<C-u>execute 'PocketAdd ' . b:last_url<CR>
+
