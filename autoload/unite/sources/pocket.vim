@@ -42,12 +42,7 @@ function! s:source.action_table.delete.func(candidate)
     let list = add(list, item.action__item.item_id)
   endfor
 
-  let res = unite#sources#pocket#api_delete_articles(list)
-  if res.status != '200'
-    call s:print_error_responce(res)
-  else
-    call s:print_message('succeeded!')
-  endif
+  call unite#sources#pocket#api_delete_articles(list)
 endfunction
 
 let s:source.action_table.archive = {
@@ -60,12 +55,7 @@ function! s:source.action_table.archive.func(candidate)
     let list = add(list, item.action__item.item_id)
   endfor
 
-  let res = unite#sources#pocket#api_archive_articles(list)
-  if res.status != '200'
-    call s:print_error_responce(res)
-  else
-    call s:print_message('succeeded!')
-  endif
+  call unite#sources#pocket#api_archive_articles(list)
 endfunction
 
 let s:source.action_table.readd = {
@@ -79,12 +69,7 @@ function! s:source.action_table.readd.func(candidate)
     let list = add(list, item.action__item.item_id)
   endfor
 
-  let res = unite#sources#pocket#api_readd_articles(list)
-  if res.status != '200'
-    call s:print_error_responce(res)
-  else
-    call s:print_message('succeeded!')
-  endif
+  call unite#sources#pocket#api_readd_articles(list)
 endfunction
 
 ""----------------------------------------------------------------------
@@ -114,7 +99,6 @@ function! unite#sources#pocket#get_item_list(filter)
   \   'sort':  g:unite_pocket_retrieve_options['sort'],
   \   'state': a:filter
   \ })
-  PP! a:filter
 
   if res.status != '200'
     call s:print_error_responce(res)
