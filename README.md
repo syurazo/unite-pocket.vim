@@ -106,6 +106,6 @@ unite-pocket.vim は Pocket に保存したコンテンツを Vim で操作す�
 
 ### W3m.vim でカレントバッファに表示している URL を Pocket に登録する
 
-    nnoremap <silent> <Leader>zpW
+    autocmd FileType w3m nnoremap <silent> <Leader>zpw
     \ :<C-u>execute 'PocketAdd ' . b:last_url<CR>
 
