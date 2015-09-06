@@ -81,8 +81,10 @@ function! s:source.gather_candidates(args,context)
 
   let candidates = []
   for val in items
-    let title =
-    \  s:search([val.given_title,val.resolved_title,val.resolved_url],'strlen')
+    let title = s:search(val,
+    \  ['given_title','resolved_title','given_url','resolved_url'],
+    \  'strlen','')
+
     let mark = g:unite_pocket_status_marks[val.status]
     call add(candidates, {
     \ 'word':           mark . title,
@@ -285,14 +287,14 @@ endfunction
 
 ""----------------------------------------------------------------------
 " misc
-function! s:search(list,func)
+function! s:search(dict,keys,func,default)
   let Func=function(a:func)
-  for item in a:list
-    if Func(item)
-      return item
+  for key in a:keys
+    if has_key(a:dict, key) && Func(a:dict[key])
+      return a:dict[key]
     endif
   endfor
-  return ''
+  return a:default
 endfunction
 
 function! s:print_message(msg)
