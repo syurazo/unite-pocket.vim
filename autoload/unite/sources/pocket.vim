@@ -72,6 +72,32 @@ function! s:source.action_table.readd.func(candidate)
   call unite#sources#pocket#api_readd_articles(list)
 endfunction
 
+let s:source.action_table.favorite = {
+\  'description':   "Mark an item as a favorite",
+\  'is_selectable': 1
+\ }
+function! s:source.action_table.favorite.func(candidate)
+  let list = []
+  for item in a:candidate
+    let list = add(list, item.action__item.item_id)
+  endfor
+
+  call unite#sources#pocket#api_favorite_articles(list)
+endfunction
+
+let s:source.action_table.unfavorite = {
+\  'description':   "Remove an item from the user's favorites",
+\  'is_selectable': 1
+\ }
+function! s:source.action_table.unfavorite.func(candidate)
+  let list = []
+  for item in a:candidate
+    let list = add(list, item.action__item.item_id)
+  endfor
+
+  call unite#sources#pocket#api_unfavorite_articles(list)
+endfunction
+
 ""----------------------------------------------------------------------
 "" Unite source : gather candidate 
 function! s:source.gather_candidates(args,context)
@@ -282,6 +308,34 @@ endfunction
 function! unite#sources#pocket#api_readd_articles(item_id_list)
   let actions =
   \  map(copy(a:item_id_list), "{'action': 'readd', 'item_id': v:val}")
+  let res = s:request_pocket_send({
+  \   'actions': webapi#json#encode(actions)
+  \ })
+
+  if res.status != '200'
+    call s:print_error_responce(res)
+  else
+    call s:print_message('succeeded!')
+  endif
+endfunction
+
+function! unite#sources#pocket#api_favorite_articles(item_id_list)
+  let actions =
+  \  map(copy(a:item_id_list), "{'action': 'favorite', 'item_id': v:val}")
+  let res = s:request_pocket_send({
+  \   'actions': webapi#json#encode(actions)
+  \ })
+
+  if res.status != '200'
+    call s:print_error_responce(res)
+  else
+    call s:print_message('succeeded!')
+  endif
+endfunction
+
+function! unite#sources#pocket#api_unfavorite_articles(item_id_list)
+  let actions =
+  \  map(copy(a:item_id_list), "{'action': 'unfavorite', 'item_id': v:val}")
   let res = s:request_pocket_send({
   \   'actions': webapi#json#encode(actions)
   \ })
