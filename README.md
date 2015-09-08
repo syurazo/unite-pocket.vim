@@ -65,6 +65,8 @@ unite-pocket.vim は Pocket に保存したコンテンツを Vim で操作す�
 |delete|コンテンツをPokcetから削除する|
 |archive|コンテンツをアーカイブに移動する|
 |readd|アーカイブからコンテンツを未読として再登録する|
+|favorite|コンテンツにスターを付ける|
+|unfavorite|コンテンツのスターを外す|
 
 ## オプション変数
 
