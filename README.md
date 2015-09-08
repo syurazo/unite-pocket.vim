@@ -38,6 +38,14 @@ unite-pocket.vim は Pocket に保存したコンテンツを Vim で操作す�
 
     :Unite pocket:archive
 
+ * スターを付けたコンテンツを表示する
+
+    :Unite pocket:all:favorited
+
+ * スターを付けていないコンテンツを表示する
+
+    :Unite pocket:all:unfavorited
+
 ### 新たにコンテンツを登録する
 
  * パラメタで URL を指定する
