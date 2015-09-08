@@ -75,9 +75,13 @@ endfunction
 ""----------------------------------------------------------------------
 "" Unite source : gather candidate 
 function! s:source.gather_candidates(args,context)
-  let filter = get(g:unite_pocket_retrieve_options, 'state', 'all')
-  let filter = get(a:args, 0, filter)
-  let items = unite#sources#pocket#get_item_list(filter)
+  let favval = {'favorited': 1, 'unfavorited': 0}
+  let favorite = get(g:unite_pocket_retrieve_options, 'favorite', '')
+  let state =    get(g:unite_pocket_retrieve_options, 'state', 'all')
+  let items = unite#sources#pocket#get_item_list({
+  \  'state':    get(a:args, 0, state),
+  \  'favorite': get(favval, get(a:args, 1, favorite), '')
+  \ })
 
   let candidates = []
   for val in items
@@ -96,12 +100,16 @@ function! s:source.gather_candidates(args,context)
 endfunction
 
 function! unite#sources#pocket#get_item_list(filter)
-  let res = s:request_pocket_get({
+  let cond = {
   \   'count': g:unite_pocket_retrieve_options['count'],
   \   'sort':  g:unite_pocket_retrieve_options['sort'],
-  \   'state': a:filter
-  \ })
+  \   'state': a:filter['state']
+  \ }
+  if has_key(a:filter, 'favorite')
+    let cond['favorite'] = a:filter['favorite']
+  endif
 
+  let res = s:request_pocket_get(cond)
   if res.status != '200'
     call s:print_error_responce(res)
     return []
