@@ -72,12 +72,42 @@ function! s:source.action_table.readd.func(candidate)
   call unite#sources#pocket#api_readd_articles(list)
 endfunction
 
+let s:source.action_table.favorite = {
+\  'description':   "Mark an item as a favorite",
+\  'is_selectable': 1
+\ }
+function! s:source.action_table.favorite.func(candidate)
+  let list = []
+  for item in a:candidate
+    let list = add(list, item.action__item.item_id)
+  endfor
+
+  call unite#sources#pocket#api_favorite_articles(list)
+endfunction
+
+let s:source.action_table.unfavorite = {
+\  'description':   "Remove an item from the user's favorites",
+\  'is_selectable': 1
+\ }
+function! s:source.action_table.unfavorite.func(candidate)
+  let list = []
+  for item in a:candidate
+    let list = add(list, item.action__item.item_id)
+  endfor
+
+  call unite#sources#pocket#api_unfavorite_articles(list)
+endfunction
+
 ""----------------------------------------------------------------------
 "" Unite source : gather candidate 
 function! s:source.gather_candidates(args,context)
-  let filter = get(g:unite_pocket_retrieve_options, 'state', 'all')
-  let filter = get(a:args, 0, filter)
-  let items = unite#sources#pocket#get_item_list(filter)
+  let favval = {'favorited': 1, 'unfavorited': 0}
+  let favorite = get(g:unite_pocket_retrieve_options, 'favorite', '')
+  let state =    get(g:unite_pocket_retrieve_options, 'state', 'all')
+  let items = unite#sources#pocket#get_item_list({
+  \  'state':    get(a:args, 0, state),
+  \  'favorite': get(favval, get(a:args, 1, favorite), '')
+  \ })
 
   let candidates = []
   for val in items
@@ -96,12 +126,16 @@ function! s:source.gather_candidates(args,context)
 endfunction
 
 function! unite#sources#pocket#get_item_list(filter)
-  let res = s:request_pocket_get({
+  let cond = {
   \   'count': g:unite_pocket_retrieve_options['count'],
   \   'sort':  g:unite_pocket_retrieve_options['sort'],
-  \   'state': a:filter
-  \ })
+  \   'state': a:filter['state']
+  \ }
+  if has_key(a:filter, 'favorite')
+    let cond['favorite'] = a:filter['favorite']
+  endif
 
+  let res = s:request_pocket_get(cond)
   if res.status != '200'
     call s:print_error_responce(res)
     return []
@@ -274,6 +308,34 @@ endfunction
 function! unite#sources#pocket#api_readd_articles(item_id_list)
   let actions =
   \  map(copy(a:item_id_list), "{'action': 'readd', 'item_id': v:val}")
+  let res = s:request_pocket_send({
+  \   'actions': webapi#json#encode(actions)
+  \ })
+
+  if res.status != '200'
+    call s:print_error_responce(res)
+  else
+    call s:print_message('succeeded!')
+  endif
+endfunction
+
+function! unite#sources#pocket#api_favorite_articles(item_id_list)
+  let actions =
+  \  map(copy(a:item_id_list), "{'action': 'favorite', 'item_id': v:val}")
+  let res = s:request_pocket_send({
+  \   'actions': webapi#json#encode(actions)
+  \ })
+
+  if res.status != '200'
+    call s:print_error_responce(res)
+  else
+    call s:print_message('succeeded!')
+  endif
+endfunction
+
+function! unite#sources#pocket#api_unfavorite_articles(item_id_list)
+  let actions =
+  \  map(copy(a:item_id_list), "{'action': 'unfavorite', 'item_id': v:val}")
   let res = s:request_pocket_send({
   \   'actions': webapi#json#encode(actions)
   \ })
