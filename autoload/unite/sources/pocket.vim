@@ -28,7 +28,9 @@ let s:source.action_table.open = {
 \}
 function! s:source.action_table.open.func(candidate)
   for item in a:candidate
-    execute g:unite_pocket_open_command . ' ' . item.action__item.resolved_url
+    let url = get(item.action__item, 'given_url', '')
+    let url = get(item.action__item, 'resolved_url', url)
+    execute g:unite_pocket_open_command . ' ' . url
   endfor
 endfunction
 
