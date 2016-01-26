@@ -9,9 +9,16 @@ unite-pocket.vim は Pocket に保存したコンテンツを Vim で操作す�
     NeoBundle 'mattn/webapi-vim.git'
     NeoBundle 'tyru/open-browser.vim'
 
-## インストール手順
+## プラグインの読み込み
 
     NeoBundle 'syurazo/unite-pocket.vim'
+
+### 遅延読み込みを行う場合
+
+    NeoBundleLazy 'syurazo/unite-pocket.vim', {
+    \   'commands': [ 'PocketList', 'PocketAdd' ],
+    \   'unite_sources': 'pocket'
+    \ }
 
 ## 使い方
 
