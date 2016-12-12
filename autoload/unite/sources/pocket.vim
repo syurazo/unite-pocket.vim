@@ -108,7 +108,8 @@ function! s:source.gather_candidates(args,context)
   let state =    get(g:unite_pocket_retrieve_options, 'state', 'all')
   let items = unite#sources#pocket#get_item_list({
   \  'state':    get(a:args, 0, state),
-  \  'favorite': get(favval, get(a:args, 1, favorite), '')
+  \  'favorite': get(favval, get(a:args, 1, favorite), ''),
+  \  'tag':      get(a:args, 2, '')
   \ })
 
   let candidates = []
@@ -135,6 +136,9 @@ function! unite#sources#pocket#get_item_list(filter)
   \ }
   if has_key(a:filter, 'favorite')
     let cond['favorite'] = a:filter['favorite']
+  endif
+  if has_key(a:filter, 'tag') && strlen(a:filter['tag']) > 0
+    let cond['tag'] = a:filter['tag']
   endif
 
   let res = s:request_pocket_get(cond)
