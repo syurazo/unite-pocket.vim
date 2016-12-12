@@ -270,8 +270,12 @@ endfunction
 
 ""----------------------------------------------------------------------
 "" Pocket API wrapper
-function! unite#sources#pocket#api_add_article(url)
-  let res = s:request_pocket_add({'url': a:url})
+function! unite#sources#pocket#api_add_article(url, tags)
+  let opts = {'url': a:url}
+  if strlen(a:tags) > 0
+    let opts.tags = a:tags
+  endif
+  let res = s:request_pocket_add(opts)
   if res.status != '200'
     call s:print_error_responce(res)
   else
