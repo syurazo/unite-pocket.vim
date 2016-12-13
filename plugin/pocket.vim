@@ -39,10 +39,10 @@ function! s:call_pocket_list()
   :Unite pocket
 endfunction
 
-command! -nargs=* PocketAdd call s:add_article(<f-args>)
+command! -nargs=? PocketAdd call s:add_article(<f-args>)
 function! s:add_article(...)
   let url  = (a:0 >= 1 ? a:1 : input('site:'))
-  let tags = (a:0 >= 2 ? a:2 : input('tags:', g:unite_pocket_default_tags))
+  let tags = (a:0 >= 1 ? ''  : input('tags:', g:unite_pocket_default_tags))
   if strlen(url) > 0
     call unite#sources#pocket#api_add_article(url, tags)
   endif
