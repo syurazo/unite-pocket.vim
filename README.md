@@ -6,19 +6,25 @@ unite-pocket.vim は Pocket に保存したコンテンツを Vim で操作す�
 
 ## 必要なプラグイン
 
+```
     NeoBundle 'mattn/webapi-vim.git'
     NeoBundle 'tyru/open-browser.vim'
+```
 
 ## プラグインの読み込み
 
+```
     NeoBundle 'syurazo/unite-pocket.vim'
+```
 
 ### 遅延読み込みを行う場合
 
+```
     NeoBundleLazy 'syurazo/unite-pocket.vim', {
     \   'commands': [ 'PocketList', 'PocketAdd' ],
     \   'unite_sources': 'pocket'
     \ }
+```
 
 ## 使い方
 
@@ -35,34 +41,48 @@ unite-pocket.vim は Pocket に保存したコンテンツを Vim で操作す�
 
  * すべてのコンテンツを表示する
 
+```
     :Unite pocket
+```
 
  * 未読コンテンツを表示する
 
+```
     :Unite pocket:unread
+```
 
  * 未読コンテンツを表示する
 
+```
     :Unite pocket:archive
+```
 
  * スターを付けたコンテンツを表示する
 
+```
     :Unite pocket:all:favorited
+```
 
  * スターを付けていないコンテンツを表示する
 
+```
     :Unite pocket:all:unfavorited
+```
 
 ### 新たにコンテンツを登録する
 
  * パラメタで URL を指定する
 
-  :PocketAdd http://example.com/hoge/fuga
+```
+    :PocketAdd http://example.com/hoge/fuga
+```
 
  * プロンプトから URL を入力する
 
-  :PocketAdd
-  site? http://example.com/hoge/fuga
+```
+    :PocketAdd
+    site? http://example.com/hoge/fuga
+```
 
 ### source から使える action
 
@@ -81,25 +101,29 @@ unite-pocket.vim は Pocket に保存したコンテンツを Vim で操作す�
 
  コンテンツを開くコマンドを変更する。
 
+```
     let g:unite_pocket_open_command = 'OpenBrowser'
+```
 
 ### g:unite_pocket_retrieve_options
 
  一覧を取得する際の件数、順序、フィルタするステータスなどを指定する。
 
+```
     let g:unite_pocket_retrieve_options = {
     \  'count':  100,
     \  'sort':   'newest',
     \  'state':  'all'
     \ }
+```
 
 ### g:unite_pocket_status_marks
 
  Unite source でコンテンツのステータスとして表示するマーカーを指定する。
 
-
+```
     let g:unite_pocket_status_marks = ['*', ' ', '!']
-
+```
 
 |index|意味|
 |-----|----|
@@ -111,18 +135,23 @@ unite-pocket.vim は Pocket に保存したコンテンツを Vim で操作す�
 
  Pocket API の Access token 等を保存するファイルを指定する。
 
+```
     let g:unite_pocket_config_file = '~/.unite-pocket'
-
+```
 
 ## カスタマイズ
 
 ### カーソル下の URL を Pocket に登録する
 
+```
     nnoremap <silent> <Leader>zpA 
     \ :<C-u>execute 'PocketAdd ' . openbrowser#get_url_on_cursor()<CR>
+```
 
 ### W3m.vim でカレントバッファに表示している URL を Pocket に登録する
 
+```
     autocmd FileType w3m nnoremap <silent> <Leader>zpw
     \ :<C-u>execute 'PocketAdd ' . b:last_url<CR>
+```
 
