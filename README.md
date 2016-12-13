@@ -69,6 +69,12 @@ unite-pocket.vim は Pocket に保存したコンテンツを Vim で操作す�
     :Unite pocket:all:unfavorited
 ```
 
+ * `DEV` タグが付いたコンテンツを表示する
+
+```
+    :Unite pocket:all::DEV
+```
+
 ### 新たにコンテンツを登録する
 
  * パラメタで URL を指定する
@@ -81,7 +87,8 @@ unite-pocket.vim は Pocket に保存したコンテンツを Vim で操作す�
 
 ```
     :PocketAdd
-    site? http://example.com/hoge/fuga
+    site: http://example.com/hoge/fuga
+    tags: example
 ```
 
 ### source から使える action
@@ -94,6 +101,9 @@ unite-pocket.vim は Pocket に保存したコンテンツを Vim で操作す�
 |readd|アーカイブからコンテンツを未読として再登録する|
 |favorite|コンテンツにスターを付ける|
 |unfavorite|コンテンツのスターを外す|
+|add_tags|コンテンツにタグを追加する|
+|remove_tags|コンテンツから特定のタグを削除する|
+|clear_tags|コンテンツからタグを削除する|
 
 ## オプション変数
 
