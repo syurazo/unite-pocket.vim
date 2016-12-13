@@ -100,6 +100,39 @@ function! s:source.action_table.unfavorite.func(candidate)
   call unite#sources#pocket#api_unfavorite_articles(list)
 endfunction
 
+let s:source.action_table.add_tags = {
+\  'description':   "Add one or more tags to an item",
+\  'is_selectable': 1
+\ }
+function! s:source.action_table.add_tags.func(candidate)
+  let tags = input('tags:')
+  if strlen(tags) > 0
+    let list = map(copy(a:candidate), 'v:val.action__item.item_id')
+    call unite#sources#pocket#api_add_tags(list, tags)
+  endif
+endfunction
+
+let s:source.action_table.remove_tags = {
+\  'description':   "Remove one or more tags from an item",
+\  'is_selectable': 1
+\ }
+function! s:source.action_table.remove_tags.func(candidate)
+  let tags = input('tags:')
+  if strlen(tags) > 0
+    let list = map(copy(a:candidate), 'v:val.action__item.item_id')
+    call unite#sources#pocket#api_remove_tags(list, tags)
+  endif
+endfunction
+
+let s:source.action_table.clear_tags = {
+\  'description':   "Remove all tags from an item",
+\  'is_selectable': 1
+\ }
+function! s:source.action_table.clear_tags.func(candidate)
+  let list = map(copy(a:candidate), 'v:val.action__item.item_id')
+  call unite#sources#pocket#api_replace_tags(list, '')
+endfunction
+
 ""----------------------------------------------------------------------
 "" Unite source : gather candidate 
 function! s:source.gather_candidates(args,context)
@@ -346,6 +379,33 @@ endfunction
 function! unite#sources#pocket#api_unfavorite_articles(item_id_list)
   let actions =
   \  map(copy(a:item_id_list), "{'action': 'unfavorite', 'item_id': v:val}")
+  let res = s:request_pocket_send({
+  \   'actions': webapi#json#encode(actions)
+  \ })
+
+  if res.status != '200'
+    call s:print_error_responce(res)
+  else
+    call s:print_message('succeeded!')
+  endif
+endfunction
+
+function! unite#sources#pocket#api_add_tags(item_id_list, tags)
+  call s:api_update_tags('tags_add', a:item_id_list, a:tags)
+endfunction
+
+function! unite#sources#pocket#api_remove_tags(item_id_list, tags)
+  call s:api_update_tags('tags_remove', a:item_id_list, a:tags)
+endfunction
+
+function! unite#sources#pocket#api_replace_tags(item_id_list, tags)
+  call s:api_update_tags('tags_replace', a:item_id_list, a:tags)
+endfunction
+
+function! s:api_update_tags(act, item_id_list, tags)
+  let tags = substitute(a:tags, "'", "''", "g")
+  let actions = map(copy(a:item_id_list),
+  \  "{'action': '" . a:act . "', 'item_id': v:val, 'tags': '" . tags . "'}")
   let res = s:request_pocket_send({
   \   'actions': webapi#json#encode(actions)
   \ })
