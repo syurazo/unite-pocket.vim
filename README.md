@@ -149,6 +149,17 @@ unite-pocket.vim は Pocket に保存したコンテンツを Vim で操作す�
     let g:unite_pocket_config_file = '~/.unite-pocket'
 ```
 
+### g:unite_pocket_formatter
+
+ Unite source で表示する文字列のフォーマッタにユーザ定義関数を指定する。
+
+```
+    function! UnitePocketFormatter(record)
+      return a:record.mark . ':' . a:record.title
+    endfunction
+    let g:unite_pocket_formatter = 'UnitePocketFormatter'
+```
+
 ## カスタマイズ
 
 ### カーソル下の URL を Pocket に登録する
@@ -163,5 +174,16 @@ unite-pocket.vim は Pocket に保存したコンテンツを Vim で操作す�
 ```
     autocmd FileType w3m nnoremap <silent> <Leader>zpw
     \ :<C-u>execute 'PocketAdd ' . b:last_url<CR>
+```
+
+### フォーマッタを登録しリストにタグを表示する
+
+```
+    function! UnitePocketFormatter(r)
+      return a:r.mark
+      \    . (len(a:r.tags) ? '[' . join(a:r.tags, ',') . ']' : '')
+      \    . a:r.title
+    endfunction
+    let g:unite_pocket_formatter = 'UnitePocketFormatter'
 ```
 
