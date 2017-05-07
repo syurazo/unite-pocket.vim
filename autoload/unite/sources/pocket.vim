@@ -159,6 +159,7 @@ function! s:source.gather_candidates(args,context)
 
     let word = call(formatter, [{
     \ 'mark':  g:unite_pocket_status_marks[val.status],
+    \ 'tags':  keys(get(val, 'tags', {})),
     \ 'title': title
     \ }])
     call add(candidates, {
