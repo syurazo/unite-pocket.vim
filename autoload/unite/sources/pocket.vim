@@ -133,6 +133,10 @@ function! s:source.action_table.clear_tags.func(candidate)
   call unite#sources#pocket#api_replace_tags(list, '')
 endfunction
 
+function! s:unite_pocket_default_formatter(record)
+  return a:record.mark . a:record.title
+endfunction
+
 ""----------------------------------------------------------------------
 "" Unite source : gather candidate 
 function! s:source.gather_candidates(args,context)
@@ -145,15 +149,20 @@ function! s:source.gather_candidates(args,context)
   \  'tag':      get(a:args, 2, '')
   \ })
 
+  let formatter = g:unite_pocket_formatter
+
   let candidates = []
   for val in items
     let title = s:search(val,
     \  ['given_title','resolved_title','given_url','resolved_url'],
     \  'strlen','')
 
-    let mark = g:unite_pocket_status_marks[val.status]
+    let word = call(formatter, [{
+    \ 'mark':  g:unite_pocket_status_marks[val.status],
+    \ 'title': title
+    \ }])
     call add(candidates, {
-    \ 'word':           mark . title,
+    \ 'word':           word,
     \ 'source':         'pocket',
     \ 'action__item':   val
     \ })

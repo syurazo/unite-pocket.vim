@@ -34,6 +34,10 @@ if !exists('g:unite_pocket_status_marks')
   let g:unite_pocket_status_marks = ['*', ' ', '!']
 endif
 
+if !exists('g:unite_pocket_formatter')
+  let g:unite_pocket_formatter = 's:unite_pocket_default_formatter'
+endif
+
 command! -nargs=0 PocketList call s:call_pocket_list()
 function! s:call_pocket_list()
   :Unite pocket
