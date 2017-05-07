@@ -174,6 +174,7 @@ function! unite#sources#pocket#get_item_list(filter)
   let cond = {
   \   'count': g:unite_pocket_retrieve_options['count'],
   \   'sort':  g:unite_pocket_retrieve_options['sort'],
+  \   'detailType': 'complete',
   \   'state': a:filter['state']
   \ }
   if has_key(a:filter, 'favorite')
