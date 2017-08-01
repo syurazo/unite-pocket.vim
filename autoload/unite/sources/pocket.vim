@@ -11,6 +11,8 @@ set cpo&vim
 "" Unite source
 let s:source = {
 \   'name': 'pocket',
+\   'hooks': {},
+\   'syntax': 'uniteSource__Pocket',
 \   'default_action': 'open'
 \ }
 
@@ -450,6 +452,15 @@ endfunction
 
 function! s:print_error_responce(res)
   call s:print_error(a:res.status . " " . a:res.message)
+endfunction
+
+function! s:source.hooks.on_syntax(args, context)
+  syntax match uniteSource__Pocket_Mark /^./
+        \ contained containedin=uniteSource__Pocket
+  syntax match uniteSource__Pocket_Tags /\[.\{-}\]/
+        \ contained containedin=uniteSource__Pocket
+  highlight link uniteSource__Pocket_Mark Identifier
+  highlight link uniteSource__Pocket_Tags Identifier
 endfunction
 
 let &cpo = s:save_cpo
